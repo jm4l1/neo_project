@@ -49,8 +49,7 @@ def load_approaches(cad_json_path='data/cad.json'):
         file_contents = json.loads(file_contents)
         cad_data = file_contents['data']
         for entry in cad_data:
-            neo = NearEarthObject(entry[0])
-            cad = CloseApproach(entry[0], entry[3], entry[4], entry[5], neo)
+            cad = CloseApproach(entry[0], entry[3], entry[4], entry[5])
             neo_approaches.append(cad)
 
     return tuple(neo_approaches)

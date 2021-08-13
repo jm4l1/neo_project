@@ -76,6 +76,9 @@ class NearEarthObject:
         return (f"NearEarthObject(designation={self.designation!r}, name={self.name!r}, "
                 f"diameter={self.diameter:.3f}, hazardous={self.hazardous!r})")
 
+    def add_approach(self, approach):
+        self.approaches.append(approach)
+
 
 class CloseApproach:
     """A close approach to Earth by an NEO.
