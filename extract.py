@@ -18,21 +18,39 @@ import json
 from models import NearEarthObject, CloseApproach
 
 
-def load_neos(neo_csv_path):
+def load_neos(neo_csv_path='data/neos.csv'):
     """Read near-Earth object information from a CSV file.
 
     :param neo_csv_path: A path to a CSV file containing data about near-Earth objects.
     :return: A collection of `NearEarthObject`s.
     """
-    # TODO: Load NEO data from the given CSV file.
-    return ()
+    # ̶ T̶O̶D̶O̶:̶ L̶o̶a̶d̶ N̶E̶O̶ d̶a̶t̶a̶ f̶r̶o̶m̶ t̶h̶e̶ g̶i̶v̶e̶n̶ C̶S̶V̶ f̶i̶l̶e̶.̶
+    neo_collection = []
+    with open(neo_csv_path, 'r') as neo_file:
+        reader = csv.DictReader(neo_file)
+        for row in reader:
+            pha = row['pha'].upper() == 'Y'
+            neo = NearEarthObject(
+                row['pdes'], row['name'], row['diameter'], pha)
+            neo_collection.append(neo)
+    return tuple(neo_collection)
 
 
-def load_approaches(cad_json_path):
+def load_approaches(cad_json_path='data/cad.json'):
     """Read close approach data from a JSON file.
 
     :param neo_csv_path: A path to a JSON file containing data about close approaches.
     :return: A collection of `CloseApproach`es.
     """
     # TODO: Load close approach data from the given JSON file.
-    return ()
+    neo_approaches = []
+    with open(cad_json_path, 'r') as cad_file:
+        file_contents = cad_file.read()
+        file_contents = json.loads(file_contents)
+        cad_data = file_contents['data']
+        for entry in cad_data:
+            neo = NearEarthObject(entry[0])
+            cad = CloseApproach(entry[0], entry[3], entry[4], entry[5], neo)
+            neo_approaches.append(cad)
+
+    return tuple(neo_approaches)

@@ -50,7 +50,7 @@ class NearEarthObject:
         # ̶ h̶a̶n̶d̶l̶e̶ a̶n̶y̶ e̶d̶g̶e̶ c̶a̶s̶e̶s̶,̶ s̶u̶c̶h̶ a̶s̶ a̶ e̶m̶p̶t̶y̶ n̶a̶m̶e̶ b̶e̶i̶n̶g̶ r̶e̶p̶r̶e̶s̶e̶n̶t̶e̶d̶ b̶y̶ `̶N̶o̶n̶e̶`̶
         # ̶ a̶n̶d̶ a̶ m̶i̶s̶s̶i̶n̶g̶ d̶i̶a̶m̶e̶t̶e̶r̶ b̶e̶i̶n̶g̶ r̶e̶p̶r̶e̶s̶e̶n̶t̶e̶d̶ b̶y̶ `̶f̶l̶o̶a̶t̶(̶'̶n̶a̶n̶'̶)̶`̶.̶
         self.designation = str(designation)
-        self.name = str(name) if name else ''
+        self.name = str(name) if name else None
         self.diameter = float(diameter) if diameter else float('nan')
         self.hazardous = bool(hazardous)
 
