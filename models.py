@@ -65,9 +65,17 @@ class NearEarthObject:
                 f"diameter={self.diameter:.3f}, hazardous={self.hazardous!r})")
 
     def add_approach(self, approach):
+        """Add a new CloseApproach object to list of approaches for object.
+
+        :param approach: CloseApproach object to be added to lists
+        """
         self.approaches.append(approach)
 
     def serialize(self):
+        """Serialize NearEarthObject object.
+
+        Returns a dictionary of attributes of designation , diameter_km, potentially_hazardous
+        """
         return {
             'designation': self.designation,
             'name': self.name or '',
@@ -120,6 +128,10 @@ class CloseApproach:
         return datetime_to_str(self.time)
 
     def serialize(self):
+        """Serialize CloseApproach object.
+
+        Returns a dictionary of attributes of datetime_utc , distance_au, velocity_km_s
+        """
         return {
             'datetime_utc': self.time_str,
             'distance_au': self.distance,

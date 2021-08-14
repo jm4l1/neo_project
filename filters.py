@@ -74,30 +74,55 @@ class AttributeFilter:
 
 
 class DiameterFilter(AttributeFilter):
+    """Implementation of Attribute filter for NearEarth Object diameter property.
+
+    This class overrides the get method of abstract class.
+    """
+
     @classmethod
     def get(cls, approach):
         return approach.neo.diameter
 
 
 class HazardFilter(AttributeFilter):
+    """Implementation of Attribute filter for NearEarth Object hazardous property.
+
+    This class overrides the get method of abstract class.
+    """
+
     @classmethod
     def get(cls, approach):
         return approach.neo.hazardous
 
 
 class DateFilter(AttributeFilter):
+    """Implementation of Attribute filter for CloseApproach time property.
+
+    This class overrides the get method of abstract class.
+    """
+
     @classmethod
     def get(cls, approach):
         return approach.time.date()
 
 
 class DistanceFilter(AttributeFilter):
+    """Implementation of Attribute filter for CloseApproach distance property.
+
+    This class overrides the get method of abstract class.
+    """
+
     @classmethod
     def get(cls, approach):
         return approach.distance
 
 
 class VelocityFilter(AttributeFilter):
+    """Implementation of Attribute filter for CloseApproach velocity property.
+
+    This class overrides the get method of abstract class.
+    """
+
     @classmethod
     def get(cls, approach):
         return approach.velocity
