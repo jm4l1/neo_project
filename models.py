@@ -18,6 +18,7 @@ quirks of the data set, such as missing names and unknown diameters.
 You'll edit this file in Task 1.
 """
 from helpers import cd_to_datetime, datetime_to_str
+from math import isnan
 
 
 class NearEarthObject:
@@ -79,6 +80,14 @@ class NearEarthObject:
     def add_approach(self, approach):
         self.approaches.append(approach)
 
+    def serialize(self):
+        return {
+            'designation': self.designation,
+            'name': self.name or '',
+            'diameter_km': self.diameter,
+            'potentially_hazardous': self.hazardous
+        }
+
 
 class CloseApproach:
     """A close approach to Earth by an NEO.
@@ -133,6 +142,13 @@ class CloseApproach:
         # ̶ T̶O̶D̶O̶:̶ U̶s̶e̶ t̶h̶i̶s̶ o̶b̶j̶e̶c̶t̶'̶s̶ `̶.̶t̶i̶m̶e̶`̶ a̶t̶t̶r̶i̶b̶u̶t̶e̶ a̶n̶d̶ t̶h̶e̶ `̶d̶a̶t̶e̶t̶i̶m̶e̶_̶t̶o̶_̶s̶t̶r̶`̶ f̶u̶n̶c̶t̶i̶o̶n̶ t̶o̶
         # ̶ b̶u̶i̶l̶d̶ a̶ f̶o̶r̶m̶a̶t̶t̶e̶d̶ r̶e̶p̶r̶e̶s̶e̶n̶t̶a̶t̶i̶o̶n̶ o̶f̶ t̶h̶e̶ a̶p̶p̶r̶o̶a̶c̶h̶ t̶i̶m̶e̶.̶
         return datetime_to_str(self.time)
+
+    def serialize(self):
+        return {
+            'datetime_utc': self.time_str,
+            'distance_au': self.distance,
+            'velocity_km_s': self.velocity
+        }
 
     def __str__(self):
         """Return `str(self)`."""

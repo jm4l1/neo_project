@@ -24,8 +24,21 @@ def write_to_csv(results, filename):
     :param results: An iterable of `CloseApproach` objects.
     :param filename: A Path-like object pointing to where the data should be saved.
     """
-    fieldnames = ('datetime_utc', 'distance_au', 'velocity_km_s', 'designation', 'name', 'diameter_km', 'potentially_hazardous')
+    fieldnames = ('datetime_utc', 'distance_au', 'velocity_km_s',
+                  'designation', 'name', 'diameter_km', 'potentially_hazardous')
     # TODO: Write the results to a CSV file, following the specification in the instructions.
+    with open(filename, 'w') as csv_out_file:
+        csv_writer = csv.writer(csv_out_file)
+        csv_writer.writerow(fieldnames)
+        for approach in results:
+            serialized_approach = approach.serialize()
+            serialized_neo = approach.neo.serialize()
+            row = [serialized_approach['datetime_utc'],
+                   serialized_approach['distance_au'], serialized_approach['velocity_km_s'],
+                   serialized_neo['designation'], serialized_neo['name'], serialized_neo[
+                       'diameter_km'], serialized_neo['potentially_hazardous']
+                   ]
+            csv_writer.writerow(row)
 
 
 def write_to_json(results, filename):
@@ -40,3 +53,14 @@ def write_to_json(results, filename):
     :param filename: A Path-like object pointing to where the data should be saved.
     """
     # TODO: Write the results to a JSON file, following the specification in the instructions.
+    with open(filename, 'w') as json_out_file:
+        results_array = []
+        for approach in results:
+            approach_object = {
+                **approach.serialize(),
+                "neo": {
+                    **(approach.neo.serialize())
+                }
+            }
+            results_array.append(approach_object)
+        json_out_file.write(json.dumps(results_array))
