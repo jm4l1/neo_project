@@ -12,6 +12,8 @@ data on NEOs and close approaches extracted by `extract.load_neos` and
 You'll edit this file in Tasks 2 and 3.
 """
 
+from functools import reduce
+
 
 class NEODatabase:
     """A database of near-Earth objects and their close approaches.
@@ -42,8 +44,6 @@ class NEODatabase:
         """
         self._neos = neos
         self._approaches = approaches
-
-        # TODO: What additional auxiliary data structures will be useful?
         self._neo_name_map = dict()
         self._neo_designation_map = dict()
 
@@ -58,7 +58,6 @@ class NEODatabase:
                     self._neo_name_map[neo_lower_name].append(neo)
                 else:
                     self._neo_name_map[neo_lower_name] = [neo]
-        # TODO: Link together the NEOs and their close approaches.
 
         for approach in self._approaches:
             neo_designation = approach._designation
@@ -83,7 +82,6 @@ class NEODatabase:
         :param designation: The primary designation of the NEO to search for.
         :return: The `NearEarthObject` with the desired primary designation, or `None`.
         """
-        # TODO: Fetch an NEO by its primary designation.
         neo = self._neo_designation_map.get(designation.lower())
         return neo
 
@@ -101,7 +99,6 @@ class NEODatabase:
         :param name: The name, as a string, of the NEO to search for.
         :return: The `NearEarthObject` with the desired name, or `None`.
         """
-        # TODO: Fetch an NEO by its name.
         neos = self._neo_name_map.get(name.lower())
         if not neos:
             return None
@@ -121,10 +118,12 @@ class NEODatabase:
         :param filters: A collection of filters capturing user-specified criteria.
         :return: A stream of matching `CloseApproach` objects.
         """
-        # TODO: Generate `CloseApproach` objects that match all of the filters.
         for approach in self._approaches:
+            # pair the approach with each filter
             approach_filters = tuple(zip([approach] * len(filters), filters))
-            result = list(filter(lambda af: af[1](
-                af[0]), approach_filters))
-            if len(result) == len(filters):
+            # perform logical and for all n conditions on the approach
+            # i.e conditions_met = condition1_met and condition2_met ..... and conditionn_met
+            conditions_met = reduce(lambda current_match, approach_filter: current_match and approach_filter[1](
+                approach_filter[0]), approach_filters, True)
+            if conditions_met:
                 yield approach
