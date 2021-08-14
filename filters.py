@@ -38,6 +38,7 @@ class AttributeFilter:
     Concrete subclasses can override the `get` classmethod to provide custom
     behavior to fetch a desired attribute from the given `CloseApproach`.
     """
+
     def __init__(self, op, value):
         """Construct a new `AttributeFilter` from an binary predicate and a reference value.
 
@@ -70,6 +71,36 @@ class AttributeFilter:
 
     def __repr__(self):
         return f"{self.__class__.__name__}(op=operator.{self.op.__name__}, value={self.value})"
+
+
+class DiameterFilter(AttributeFilter):
+    @classmethod
+    def get(cls, approach):
+        return approach.neo.diameter
+
+
+class HazardFilter(AttributeFilter):
+    @classmethod
+    def get(cls, approach):
+        return approach.neo.hazardous
+
+
+class DateFilter(AttributeFilter):
+    @classmethod
+    def get(cls, approach):
+        return approach.time.date()
+
+
+class DistanceFilter(AttributeFilter):
+    @classmethod
+    def get(cls, approach):
+        return approach.distance
+
+
+class VelocityFilter(AttributeFilter):
+    @classmethod
+    def get(cls, approach):
+        return approach.velocity
 
 
 def create_filters(date=None, start_date=None, end_date=None,
@@ -106,8 +137,30 @@ def create_filters(date=None, start_date=None, end_date=None,
     :param hazardous: Whether the NEO of a matching `CloseApproach` is potentially hazardous.
     :return: A collection of filters for use with `query`.
     """
-    # TODO: Decide how you will represent your filters.
-    return ()
+    # ̶ T̶O̶D̶O̶:̶ D̶e̶c̶i̶d̶e̶ h̶o̶w̶ y̶o̶u̶ w̶i̶l̶l̶ r̶e̶p̶r̶e̶s̶e̶n̶t̶ y̶o̶u̶r̶ f̶i̶l̶t̶e̶r̶s̶.̶
+    filters = []
+    if date:
+        filters.append(DateFilter(operator.eq, date))
+    if start_date:
+        filters.append(DateFilter(operator.ge, start_date))
+    if end_date:
+        filters.append(DateFilter(operator.le, end_date))
+    if distance_min:
+        filters.append(DistanceFilter(operator.ge, distance_min))
+    if distance_max:
+        filters.append(DistanceFilter(operator.le, distance_max))
+    if velocity_min:
+        filters.append(VelocityFilter(operator.ge, velocity_min))
+    if velocity_max:
+        filters.append(VelocityFilter(operator.le, velocity_max))
+    if diameter_min:
+        filters.append(DiameterFilter(operator.ge, diameter_min))
+    if diameter_max:
+        filters.append(DiameterFilter(operator.le, diameter_max))
+    if type(hazardous) is bool:
+        filters.append(HazardFilter(operator.eq, hazardous))
+
+    return tuple(filters)
 
 
 def limit(iterator, n=None):
@@ -119,5 +172,22 @@ def limit(iterator, n=None):
     :param n: The maximum number of values to produce.
     :yield: The first (at most) `n` values from the iterator.
     """
-    # TODO: Produce at most `n` values from the given iterator.
-    return iterator
+    # ̶ T̶O̶D̶O̶:̶ P̶r̶o̶d̶u̶c̶e̶ a̶t̶ m̶o̶s̶t̶ `̶n̶`̶ v̶a̶l̶u̶e̶s̶ f̶r̶o̶m̶ t̶h̶e̶ g̶i̶v̶e̶n̶ i̶t̶e̶r̶a̶t̶o̶r̶.̶
+    if not n:
+        return iterator
+    x = get_with_limits(iterator)
+    i = 0
+    result = []
+    while i < n:
+        try:
+            result.append(next(x))
+            i += 1
+        except StopIteration:
+            return result
+    return result
+
+
+def get_with_limits(iterable):
+    for i in iterable:
+        yield i
+    return

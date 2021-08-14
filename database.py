@@ -123,4 +123,8 @@ class NEODatabase:
         """
         # TODO: Generate `CloseApproach` objects that match all of the filters.
         for approach in self._approaches:
-            yield approach
+            approach_filters = tuple(zip([approach] * len(filters), filters))
+            result = list(filter(lambda af: af[1](
+                af[0]), approach_filters))
+            if len(result) == len(filters):
+                yield approach
